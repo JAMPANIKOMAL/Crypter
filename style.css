@@ -17,8 +17,8 @@
     --red-hover: #e74c3c;
     --blue: #0969da;
     --blue-hover: #3498db;
-    --grey: #6e7681;
-    --grey-hover: #8b949e;
+    --grey: #21262d;
+    --grey-hover: #30363d;
     --orange: #f57c00;
     --purple: #8250df;
     --shadow-dark: rgba(200, 200, 255, 0.05);
@@ -87,7 +87,7 @@ body.light-mode { background-color: var(--bg-light); color: var(--text-light); }
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     white-space: nowrap;
-    border: none; 
+    border: 1px solid transparent; 
     box-shadow: 0 4px 8px var(--button-shadow-dark); 
     color: white; 
 }
@@ -100,10 +100,9 @@ body.light-mode .btn-main {
 }
 
 /* Specific button colors with gradients */
-.btn-green { background-image: linear-gradient(to top, var(--green), var(--green-hover)); }
-.btn-blue { background-image: linear-gradient(to top, var(--blue), var(--blue-hover)); }
-.btn-red { background-image: linear-gradient(to top, var(--red), var(--red-hover)); }
-.btn-grey { background-image: linear-gradient(to top, var(--grey), var(--grey-hover)); }
+.btn-green { background-image: linear-gradient(to top, var(--green), var(--green-hover)); border-color: var(--green); }
+.btn-blue { background-image: linear-gradient(to top, var(--blue), var(--blue-hover)); border-color: var(--blue); }
+.btn-red { background-image: linear-gradient(to top, var(--red), var(--red-hover)); border-color: var(--red); }
 .btn-orange { background-color: var(--orange); }
 
 .btn-header {
@@ -452,5 +451,17 @@ body.light-mode .modal-header {
     #moreCiphersBtn {
         display: block; /* Show the 'More' button on mobile */
         margin-top: 5px;
+        background-color: var(--grey);
+        background-image: none;
+        border-color: var(--grey-hover);
+        color: var(--text-dark);
+    }
+    #moreCiphersBtn:hover {
+        background-color: var(--grey-hover);
+    }
+    body.light-mode #moreCiphersBtn {
+        background-color: #e1e4e8;
+        border-color: #d0d7de;
+        color: var(--text-light);
     }
 }

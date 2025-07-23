@@ -67,7 +67,7 @@
                 <button class="btn-main btn-blue extra-cipher" data-cipher="3des">3DES</button>
                 
                 <!-- The "More" button, only visible on mobile -->
-                <button id="moreCiphersBtn" class="btn-main btn-grey">More Ciphers...</button>
+                <button id="moreCiphersBtn" class="btn-main">More Ciphers...</button>
             </div>
         </div>
 
@@ -268,12 +268,17 @@
         });
 
         // --- Collapsible Cipher List for Mobile ---
+        const setInitialMobileView = () => {
+            if (window.innerWidth <= 768) {
+                $('.extra-cipher').hide();
+            } else {
+                $('.extra-cipher').show();
+            }
+        };
+
         $('#moreCiphersBtn').on('click', function() {
             const btn = $(this);
-            // Use a slide animation for a smooth effect
             $('.extra-cipher').slideToggle('fast');
-
-            // Toggle button text
             if (btn.text() === 'More Ciphers...') {
                 btn.text('Show Less');
             } else {
@@ -557,6 +562,7 @@
         $('#decryptBtn').on('click', () => handleCipherAction(false));
 
         // Initial setup
+        setInitialMobileView();
         showCipherTool('caesar');
     });
 </script>
