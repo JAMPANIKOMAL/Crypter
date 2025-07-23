@@ -13,21 +13,25 @@
     <div class="top-bar">
         <div class="logo-title">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-icon">
-                <!-- Key shape -->
-                <circle cx="7" cy="12" r="3" stroke="#58a6ff" stroke-width="2"/>
-                <rect x="10" y="11" width="8" height="2" fill="#58a6ff"/>
-                <rect x="16" y="9" width="2" height="2" fill="#58a6ff"/>
-                <rect x="16" y="13" width="2" height="2" fill="#58a6ff"/>
+                <!-- Central key with better proportions -->
+                <circle cx="8" cy="12" r="2.5" stroke="#58a6ff" stroke-width="2" fill="none"/>
+                <rect x="10.5" y="11.2" width="7" height="1.6" fill="#58a6ff" rx="0.8"/>
+                <rect x="16" y="9.5" width="1.5" height="1.5" fill="#58a6ff" rx="0.3"/>
+                <rect x="16" y="13" width="1.5" height="1.5" fill="#58a6ff" rx="0.3"/>
                 
-                <!-- Transformation arrows -->
-                <path d="M4 6 L8 6 M6 4 L8 6 L6 8" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M20 18 L16 18 M18 16 L16 18 L18 20" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Refined transformation arrows -->
+                <path d="M3 7 L6 7 M5 5.5 L6 7 L5 8.5" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 17 L18 17 M19 15.5 L18 17 L19 18.5" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                 
-                <!-- Binary dots representing data -->
-                <circle cx="4" cy="4" r="1" fill="#58a6ff" opacity="0.7"/>
-                <circle cx="6" cy="2" r="1" fill="#58a6ff" opacity="0.7"/>
-                <circle cx="20" cy="20" r="1" fill="#58a6ff" opacity="0.7"/>
-                <circle cx="18" cy="22" r="1" fill="#58a6ff" opacity="0.7"/>
+                <!-- Data representation - more organized -->
+                <circle cx="3" cy="5" r="0.8" fill="#58a6ff"/>
+                <circle cx="5" cy="3.5" r="0.8" fill="#58a6ff" opacity="0.8"/>
+                <circle cx="21" cy="19" r="0.8" fill="#58a6ff"/>
+                <circle cx="19" cy="20.5" r="0.8" fill="#58a6ff" opacity="0.8"/>
+                
+                <!-- Subtle connecting lines for flow -->
+                <path d="M6 7 Q8 9 8 12" stroke="#58a6ff" stroke-width="1" opacity="0.4" fill="none"/>
+                <path d="M16 12 Q18 15 18 17" stroke="#58a6ff" stroke-width="1" opacity="0.4" fill="none"/>
             </svg>
             <h1 id="dashboardTitle">Crypter</h1>
         </div>
