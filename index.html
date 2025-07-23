@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Crypter - Caesar Cipher</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Local jQuery file - remember to download it into your project folder -->
+    <script src="jquery-3.7.0.min.js"></script> 
+    <style>
+        /* Add any specific animations if needed */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="dark-mode">
+<div class="container">
+    <div class="top-bar">
+        <div class="logo-title">
+            <!-- Cipher/Lock Symbol SVG - a new icon for Crypter -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-icon">
+                <path d="M12 11V17" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 14C10.3431 14 9 12.6569 9 11C9 9.34315 10.3431 8 12 8C13.6569 8 15 9.34315 15 11C15 12.6569 13.6569 14 12 14Z" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h1 id="dashboardTitle">Crypter</h1>
+        </div>
+        
+        <div class="header-controls">
+            <!-- Theme Toggle -->
+            <div class="toggle-switch">
+                <span>Light</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle" checked>
+                    <span class="slider"></span>
+                </label>
+                <span>Dark</span>
+            </div>
+            <!-- Info Button for Crypter -->
+            <button id="infoBtn" class="btn-header">ⓘ Info</button>
+        </div>
+    </div>
+
+    <div class="main-content-area">
+        <div class="cipher-selection-section card">
+            <h2>Select Cipher:</h2>
+            <div class="cipher-buttons">
+                <button id="caesarCipherBtn" class="btn-main btn-blue active-cipher">Caesar Cipher</button>
+                <!-- Other cipher buttons will go here later -->
+            </div>
+        </div>
+
+        <div class="cipher-tool-section card">
+            <h2>Caesar Cipher</h2>
+            <div class="input-output-group">
+                <div class="input-section">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
+                </div>
+                <div class="output-section">
+                    <label for="outputText">Output Text:</label>
+                    <textarea id="outputText" placeholder="Result will appear here..." readonly></textarea>
+                </div>
+            </div>
+
+            <div class="controls-group">
+                <div class="shift-input-group">
+                    <label for="shiftKey">Shift Key (1-25):</label>
+                    <input type="number" id="shiftKey" value="3" min="1" max="25">
+                </div>
+                <div class="action-buttons">
+                    <button id="encryptBtn" class="btn-main btn-green">Encrypt</button>
+                    <button id="decryptBtn" class="btn-main btn-red">Decrypt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Modal for Crypter -->
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>About Crypter</h2>
+            <span class="close-button info-close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Welcome to Crypter! This tool allows you to encrypt and decrypt text using various classical ciphers.</p>
+            <p>Currently, the **Caesar Cipher** is available. More ciphers will be added in future updates!</p>
+            <h3>Caesar Cipher:</h3>
+            <p>The Caesar cipher is one of the simplest and most widely known encryption techniques. It's a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet. For example, with a left shift of 3, D would be replaced by A, E would become B, and so on.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Alert Modal (from previous project) -->
+<div id="customAlertModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="customAlertTitle">Message</h2>
+            <span class="close-button custom-alert-close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p id="customAlertMessage"></p>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn-main btn-green custom-alert-ok-button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Custom Alert/Message Box Logic
+    const customAlertModal = $('#customAlertModal');
+    const customAlertTitle = $('#customAlertTitle');
+    const customAlertMessage = $('#customAlertMessage');
+
+    const showAlert = (title, message) => {
+        customAlertTitle.text(title);
+        customAlertMessage.text(message);
+        customAlertModal.show();
+    };
+
+    $('.custom-alert-close-button, .custom-alert-ok-button').on('click', () => customAlertModal.hide());
+    $(window).on('click', (event) => {
+        if ($(event.target).is(customAlertModal)) {
+            customAlertModal.hide();
+        }
+    });
+
+    $(document).ready(function () {
+        // --- Theme Toggle Logic (reused) ---
+        const applyTheme = (theme) => {
+            $('body').removeClass('dark-mode light-mode').addClass(theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        $('#themeToggle').on('change', function() {
+            if ($(this).is(':checked')) {
+                applyTheme('dark-mode');
+            } else {
+                applyTheme('light-mode');
+            }
+        });
+
+        // Set initial theme based on localStorage or default to dark
+        if (localStorage.getItem('theme') === 'light-mode') {
+            $('#themeToggle').prop('checked', false);
+            applyTheme('light-mode');
+        } else {
+            $('#themeToggle').prop('checked', true);
+            applyTheme('dark-mode');
+        }
+
+        // --- Modals Logic (reused) ---
+        const infoModal = $('#infoModal');
+        $('#infoBtn').on('click', () => infoModal.show());
+        $('.info-close-button').on('click', () => infoModal.hide());
+        $(window).on('click', (event) => {
+            if ($(event.target).is(infoModal)) {
+                infoModal.hide();
+            }
+        });
+
+        // --- Caesar Cipher Logic ---
+        const caesarCipher = (text, shift, encrypt = true) => {
+            let result = '';
+            shift = shift % 26; // Ensure shift wraps around alphabet
+            if (!encrypt) {
+                shift = (26 - shift) % 26; // For decryption, shift in opposite direction
+            }
+
+            for (let i = 0; i < text.length; i++) {
+                let char = text.charCodeAt(i);
+
+                if (char >= 65 && char <= 90) { // Uppercase letters (A-Z)
+                    result += String.fromCharCode(((char - 65 + shift) % 26) + 65);
+                } else if (char >= 97 && char <= 122) { // Lowercase letters (a-z)
+                    result += String.fromCharCode(((char - 97 + shift) % 26) + 97);
+                } else {
+                    result += text.charAt(i); // Keep non-alphabetic characters as is
+                }
+            }
+            return result;
+        };
+
+        $('#encryptBtn').on('click', function() {
+            const inputText = $('#inputText').val();
+            const shiftKey = parseInt($('#shiftKey').val());
+
+            if (inputText.trim() === '') {
+                showAlert('Input Missing', 'Please enter text to encrypt.');
+                return;
+            }
+            if (isNaN(shiftKey) || shiftKey < 1 || shiftKey > 25) {
+                showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
+                return;
+            }
+
+            const encryptedText = caesarCipher(inputText, shiftKey, true);
+            $('#outputText').val(encryptedText);
+        });
+
+        $('#decryptBtn').on('click', function() {
+            const inputText = $('#inputText').val();
+            const shiftKey = parseInt($('#shiftKey').val());
+
+            if (inputText.trim() === '') {
+                showAlert('Input Missing', 'Please enter text to decrypt.');
+                return;
+            }
+            if (isNaN(shiftKey) || shiftKey < 1 || shiftKey > 25) {
+                showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
+                return;
+            }
+
+            const decryptedText = caesarCipher(inputText, shiftKey, false);
+            $('#outputText').val(decryptedText);
+        });
+
+        // Ensure default shift key is loaded
+        if (isNaN(parseInt($('#shiftKey').val()))) {
+            $('#shiftKey').val(3);
+        }
+    });
+</script>
+</body>
+</html>
