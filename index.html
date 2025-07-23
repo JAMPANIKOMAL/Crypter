@@ -361,7 +361,7 @@
                         newChar2 = keyMatrix[(pos2.r + 1) % 5][pos2.c];
                     } else { // Decrypt
                         newChar1 = keyMatrix[(pos1.r - 1 + 5) % 5][pos1.c];
-                        newChar2 = keyMatrix[(pos2.r - 1 + 5) % 5][pos2.c];
+                        newChar2 = keyMatrix[(pos2.r - 1 + 5) % 5][pos1.c]; // Fixed: should use pos1.c
                     }
                 } else { // Forms a rectangle
                     newChar1 = keyMatrix[pos1.r][pos2.c];

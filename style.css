@@ -203,22 +203,23 @@ body.light-mode .card:hover { box-shadow: 0 10px 20px var(--shadow-light); }
     filter: brightness(1); 
 }
 
-/* Hidden Cipher Section */
-.hidden-cipher-section {
+/* Hidden Controls within unified cipher section */
+.cipher-controls.hidden-controls {
     display: none !important; /* Use !important to ensure it overrides flex/block */
 }
 
-/* Active Cipher Section */
-.active-cipher-section {
-    display: flex; /* Or block, depending on desired layout */
-    flex-direction: column;
-    width: 100%;
+/* Active Controls within unified cipher section */
+.cipher-controls.active-controls {
+    display: flex; /* Override hidden-controls */
+    flex-direction: column; /* Default layout for controls */
+    width: 100%; /* Take full width of parent */
+    gap: 15px; /* Spacing between control groups */
 }
 
 
 /* Cipher Tool Section (Unified) */
 .cipher-tool-section {
-    display: flex; /* Ensure it's always flex, hidden/shown by active-cipher-section */
+    display: flex; 
     flex-direction: column;
     gap: 20px;
 }
