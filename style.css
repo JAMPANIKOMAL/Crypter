@@ -63,7 +63,14 @@ body.light-mode { background-color: var(--bg-light); color: var(--text-light); }
     flex-wrap: nowrap; 
     gap: 20px; 
     margin-bottom: 25px; 
-    padding: 10px 0;
+    width: 100vw; /* Full viewport width */
+    padding: 10px 20px; /* Add padding back for edge spacing */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    box-sizing: border-box;
 }
 .logo-title { display: flex; align-items: center; gap: 12px; }
 .logo-title h1 { font-size: 1.6rem; margin: 0; white-space: nowrap; }
