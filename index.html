@@ -50,80 +50,44 @@
             </div>
         </div>
 
-        <!-- Caesar Cipher Section -->
-        <div id="caesarCipherSection" class="cipher-tool-section card active-cipher-section">
-            <h2>Caesar Cipher</h2>
+        <!-- Unified Cipher Tool Section -->
+        <div id="unifiedCipherToolSection" class="cipher-tool-section card">
+            <h2 id="currentCipherTitle">Caesar Cipher</h2>
             <div class="input-output-group">
                 <div class="input-section">
-                    <label for="caesarInputText">Input Text:</label>
-                    <textarea id="caesarInputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
                 </div>
                 <div class="output-section">
-                    <label for="caesarOutputText">Output Text:</label>
-                    <textarea id="caesarOutputText" placeholder="Result will appear here..." readonly></textarea>
+                    <label for="outputText">Output Text:</label>
+                    <textarea id="outputText" placeholder="Result will appear here..." readonly></textarea>
                 </div>
             </div>
 
             <div class="controls-group">
-                <div class="shift-input-group">
-                    <label for="caesarShiftKey">Shift Key (1-25):</label>
-                    <input type="number" id="caesarShiftKey" value="3" min="1" max="25">
+                <!-- Cipher-specific controls will be dynamically loaded here -->
+                <div id="caesarControls" class="cipher-controls active-controls">
+                    <div class="shift-input-group">
+                        <label for="shiftKey">Shift Key (1-25):</label>
+                        <input type="number" id="shiftKey" value="3" min="1" max="25">
+                    </div>
                 </div>
+                <div id="railFenceControls" class="cipher-controls hidden-controls">
+                    <div class="shift-input-group">
+                        <label for="railFenceKey">Key (Number of Rails):</label>
+                        <input type="number" id="railFenceKey" value="3" min="2">
+                    </div>
+                </div>
+                <div id="playfairControls" class="cipher-controls hidden-controls">
+                    <div class="shift-input-group">
+                        <label for="playfairKeyword">Keyword:</label>
+                        <input type="text" id="playfairKeyword" value="MONARCHY">
+                    </div>
+                </div>
+
                 <div class="action-buttons">
-                    <button id="caesarEncryptBtn" class="btn-main btn-green">Encrypt</button>
-                    <button id="caesarDecryptBtn" class="btn-main btn-red">Decrypt</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rail Fence Cipher Section -->
-        <div id="railFenceCipherSection" class="cipher-tool-section card hidden-cipher-section">
-            <h2>Rail Fence Cipher</h2>
-            <div class="input-output-group">
-                <div class="input-section">
-                    <label for="railFenceInputText">Input Text:</label>
-                    <textarea id="railFenceInputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
-                </div>
-                <div class="output-section">
-                    <label for="railFenceOutputText">Output Text:</label>
-                    <textarea id="railFenceOutputText" placeholder="Result will appear here..." readonly></textarea>
-                </div>
-            </div>
-
-            <div class="controls-group">
-                <div class="shift-input-group">
-                    <label for="railFenceKey">Key (Number of Rails):</label>
-                    <input type="number" id="railFenceKey" value="3" min="2">
-                </div>
-                <div class="action-buttons">
-                    <button id="railFenceEncryptBtn" class="btn-main btn-green">Encrypt</button>
-                    <button id="railFenceDecryptBtn" class="btn-main btn-red">Decrypt</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Playfair Cipher Section -->
-        <div id="playfairCipherSection" class="cipher-tool-section card hidden-cipher-section">
-            <h2>Playfair Cipher</h2>
-            <div class="input-output-group">
-                <div class="input-section">
-                    <label for="playfairInputText">Input Text:</label>
-                    <textarea id="playfairInputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
-                </div>
-                <div class="output-section">
-                    <label for="playfairOutputText">Output Text:</label>
-                    <textarea id="playfairOutputText" placeholder="Result will appear here..." readonly></textarea>
-                </div>
-            </div>
-
-            <div class="controls-group">
-                <div class="shift-input-group">
-                    <label for="playfairKeyword">Keyword:</label>
-                    <input type="text" id="playfairKeyword" value="MONARCHY">
-                </div>
-                <div class="action-buttons">
-                    <button id="playfairEncryptBtn" class="btn-main btn-green">Encrypt</button>
-                    <button id="playfairDecryptBtn" class="btn-main btn-red">Decrypt</button>
+                    <button id="encryptBtn" class="btn-main btn-green">Encrypt</button>
+                    <button id="decryptBtn" class="btn-main btn-red">Decrypt</button>
                 </div>
             </div>
         </div>
@@ -222,25 +186,32 @@
         // --- Cipher Switching Logic ---
         let activeCipher = 'caesar'; // Default active cipher
 
-        const showCipherSection = (cipherName) => {
-            $('.cipher-tool-section').removeClass('active-cipher-section').addClass('hidden-cipher-section');
-            $(`#${cipherName}CipherSection`).removeClass('hidden-cipher-section').addClass('active-cipher-section');
-            
+        const showCipherTool = (cipherName) => {
+            // Update active cipher button
             $('.cipher-buttons .btn-main').removeClass('active-cipher');
             $(`button[data-cipher="${cipherName}"]`).addClass('active-cipher');
             
+            // Update current cipher title
+            $('#currentCipherTitle').text(`${cipherName.charAt(0).toUpperCase() + cipherName.slice(1)} Cipher`);
+
+            // Hide all cipher-specific controls and show only the active one
+            $('.cipher-controls').removeClass('active-controls').addClass('hidden-controls');
+            $(`#${cipherName}Controls`).removeClass('hidden-controls').addClass('active-controls');
+
             activeCipher = cipherName;
             // Clear textareas when switching ciphers
-            $(`#${cipherName}InputText`).val('');
-            $(`#${cipherName}OutputText`).val('');
+            $('#inputText').val('');
+            $('#outputText').val('');
         };
 
         // Attach click handlers to cipher selection buttons
-        $('#caesarCipherBtn').on('click', () => showCipherSection('caesar'));
-        $('#railFenceCipherBtn').on('click', () => showCipherSection('railfence'));
-        $('#playfairCipherBtn').on('click', () => showCipherSection('playfair'));
+        $('#caesarCipherBtn').on('click', () => showCipherTool('caesar'));
+        $('#railFenceCipherBtn').on('click', () => showCipherTool('railfence'));
+        $('#playfairCipherBtn').on('click', () => showCipherTool('playfair'));
 
-        // --- Caesar Cipher Logic ---
+        // --- Cipher Implementations ---
+
+        // Caesar Cipher
         const caesarCipher = (text, shift, encrypt = true) => {
             let result = '';
             shift = shift % 26; 
@@ -262,131 +233,230 @@
             return result;
         };
 
-        $('#caesarEncryptBtn').on('click', function() {
-            const inputText = $('#caesarInputText').val();
-            const shiftKey = parseInt($('#caesarShiftKey').val());
-
-            if (inputText.trim() === '') {
-                showAlert('Input Missing', 'Please enter text to encrypt.');
-                return;
-            }
-            if (isNaN(shiftKey) || shiftKey < 1 || shiftKey > 25) {
-                showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
-                return;
-            }
-
-            const encryptedText = caesarCipher(inputText, shiftKey, true);
-            $('#caesarOutputText').val(encryptedText);
-        });
-
-        $('#caesarDecryptBtn').on('click', function() {
-            const inputText = $('#caesarInputText').val();
-            const shiftKey = parseInt($('#caesarShiftKey').val());
-
-            if (inputText.trim() === '') {
-                showAlert('Input Missing', 'Please enter text to decrypt.');
-                return;
-            }
-            if (isNaN(shiftKey) || shiftKey < 1 || shiftKey > 25) {
-                showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
-                return;
-            }
-
-            const decryptedText = caesarCipher(inputText, shiftKey, false);
-            $('#caesarOutputText').val(decryptedText);
-        });
-
-        // Ensure default shift key is loaded for Caesar
-        if (isNaN(parseInt($('#caesarShiftKey').val()))) {
-            $('#caesarShiftKey').val(3);
-        }
-
-        // --- Rail Fence Cipher Logic (Placeholder) ---
+        // Rail Fence Cipher
         const railFenceCipher = (text, key, encrypt = true) => {
-            // Implementation will go here
+            text = text.replace(/[^A-Za-z]/g, '').toUpperCase(); // Only letters, uppercase
+            if (key <= 1 || text.length === 0) return text;
+
+            let rail = [];
+            for(let i = 0; i < key; i++) {
+                rail.push([]);
+            }
+
+            let dirDown = false;
+            let row = 0;
+
+            for(let i = 0; i < text.length; i++) {
+                if (row === 0 || row === key - 1) {
+                    dirDown = !dirDown;
+                }
+                rail[row].push(text.charAt(i));
+                dirDown ? row++ : row--;
+            }
+
             if (encrypt) {
-                showAlert('Rail Fence Cipher', 'Encryption logic for Rail Fence is not yet implemented.');
-                return "ENCRYPTED: " + text; // Placeholder
-            } else {
-                showAlert('Rail Fence Cipher', 'Decryption logic for Rail Fence is not yet implemented.');
-                return "DECRYPTED: " + text; // Placeholder
+                let result = [];
+                for(let i = 0; i < key; i++) {
+                    result.push(...rail[i]);
+                }
+                return result.join('');
+            } else { // Decrypt
+                let result = [];
+                let ptr = 0;
+                for(let i = 0; i < key; i++) {
+                    for(let j = 0; j < rail[i].length; j++) {
+                        rail[i][j] = text.charAt(ptr++);
+                    }
+                }
+
+                dirDown = false;
+                row = 0;
+                for(let i = 0; i < text.length; i++) {
+                    if (row === 0 || row === key - 1) {
+                        dirDown = !dirDown;
+                    }
+                    result.push(rail[row].shift());
+                    dirDown ? row++ : row--;
+                }
+                return result.join('');
             }
         };
 
-        $('#railFenceEncryptBtn').on('click', function() {
-            const inputText = $('#railFenceInputText').val();
-            const key = parseInt($('#railFenceKey').val());
-            if (inputText.trim() === '') {
-                showAlert('Input Missing', 'Please enter text to encrypt.');
-                return;
-            }
-            if (isNaN(key) || key < 2) {
-                showAlert('Invalid Key', 'Please enter a valid key (number of rails, minimum 2).');
-                return;
-            }
-            const encryptedText = railFenceCipher(inputText, key, true);
-            $('#railFenceOutputText').val(encryptedText);
-        });
-
-        $('#railFenceDecryptBtn').on('click', function() {
-            const inputText = $('#railFenceInputText').val();
-            const key = parseInt($('#railFenceKey').val());
-            if (inputText.trim() === '') {
-                showAlert('Input Missing', 'Please enter text to decrypt.');
-                return;
-            }
-            if (isNaN(key) || key < 2) {
-                showAlert('Invalid Key', 'Please enter a valid key (number of rails, minimum 2).');
-                return;
-            }
-            const decryptedText = railFenceCipher(inputText, key, false);
-            $('#railFenceOutputText').val(decryptedText);
-        });
-
-        // --- Playfair Cipher Logic (Placeholder) ---
+        // Playfair Cipher
         const playfairCipher = (text, keyword, encrypt = true) => {
-            // Implementation will go here
-            if (encrypt) {
-                showAlert('Playfair Cipher', 'Encryption logic for Playfair is not yet implemented.');
-                return "ENCRYPTED: " + text; // Placeholder
-            } else {
-                showAlert('Playfair Cipher', 'Decryption logic for Playfair is not yet implemented.');
-                return "DECRYPTED: " + text; // Placeholder
+            // Helper to generate the 5x5 key matrix
+            const generateKeyMatrix = (key) => {
+                const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // I/J are combined
+                let processedKey = "";
+                // Remove duplicates and 'J', add remaining alphabet
+                for (let char of key.toUpperCase()) {
+                    if (char !== 'J' && !processedKey.includes(char)) {
+                        processedKey += char;
+                    }
+                }
+                for (let char of alphabet) {
+                    if (!processedKey.includes(char)) {
+                        processedKey += char;
+                    }
+                }
+
+                let matrix = [];
+                for (let i = 0; i < 5; i++) {
+                    matrix.push(processedKey.substring(i * 5, (i * 5) + 5).split(''));
+                }
+                return matrix;
+            };
+
+            // Helper to find character position in matrix
+            const findCharPos = (matrix, char) => {
+                for (let r = 0; r < 5; r++) {
+                    for (let c = 0; c < 5; c++) {
+                        if (matrix[r][c] === char) {
+                            return { r, c };
+                        }
+                    }
+                }
+                return null; // Should not happen with valid input
+            };
+
+            // Prepare plaintext
+            let preparedText = text.toUpperCase().replace(/[^A-Z]/g, '');
+            preparedText = preparedText.replace(/J/g, 'I'); // Replace J with I
+
+            let digraphs = [];
+            for (let i = 0; i < preparedText.length; i += 2) {
+                let char1 = preparedText[i];
+                let char2 = preparedText[i + 1];
+
+                if (char2 === undefined) { // Last character, add X
+                    digraphs.push([char1, 'X']);
+                } else if (char1 === char2) { // Double letters, insert X
+                    digraphs.push([char1, 'X']);
+                    i--; // Re-process the second original character
+                } else {
+                    digraphs.push([char1, char2]);
+                }
             }
+
+            const keyMatrix = generateKeyMatrix(keyword);
+            let result = [];
+
+            for (let digraph of digraphs) {
+                let pos1 = findCharPos(keyMatrix, digraph[0]);
+                let pos2 = findCharPos(keyMatrix, digraph[1]);
+
+                let newChar1, newChar2;
+
+                if (pos1.r === pos2.r) { // Same row
+                    if (encrypt) {
+                        newChar1 = keyMatrix[pos1.r][(pos1.c + 1) % 5];
+                        newChar2 = keyMatrix[pos2.r][(pos2.c + 1) % 5];
+                    } else { // Decrypt
+                        newChar1 = keyMatrix[pos1.r][(pos1.c - 1 + 5) % 5];
+                        newChar2 = keyMatrix[pos2.r][(pos2.c - 1 + 5) % 5];
+                    }
+                } else if (pos1.c === pos2.c) { // Same column
+                    if (encrypt) {
+                        newChar1 = keyMatrix[(pos1.r + 1) % 5][pos1.c];
+                        newChar2 = keyMatrix[(pos2.r + 1) % 5][pos2.c];
+                    } else { // Decrypt
+                        newChar1 = keyMatrix[(pos1.r - 1 + 5) % 5][pos1.c];
+                        newChar2 = keyMatrix[(pos2.r - 1 + 5) % 5][pos2.c];
+                    }
+                } else { // Forms a rectangle
+                    newChar1 = keyMatrix[pos1.r][pos2.c];
+                    newChar2 = keyMatrix[pos2.r][pos1.c];
+                }
+                result.push(newChar1, newChar2);
+            }
+            return result.join('');
         };
 
-        $('#playfairEncryptBtn').on('click', function() {
-            const inputText = $('#playfairInputText').val();
-            const keyword = $('#playfairKeyword').val().toUpperCase().replace(/[^A-Z]/g, ''); // Clean keyword
+        // --- Unified Encryption/Decryption Handler ---
+        $('#encryptBtn').on('click', function() {
+            const inputText = $('#inputText').val();
+            let outputText = '';
+
             if (inputText.trim() === '') {
                 showAlert('Input Missing', 'Please enter text to encrypt.');
                 return;
             }
-            if (keyword.length === 0) {
-                showAlert('Invalid Keyword', 'Please enter a valid keyword for Playfair cipher.');
-                return;
+
+            switch(activeCipher) {
+                case 'caesar':
+                    const caesarShiftKey = parseInt($('#shiftKey').val());
+                    if (isNaN(caesarShiftKey) || caesarShiftKey < 1 || caesarShiftKey > 25) {
+                        showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
+                        return;
+                    }
+                    outputText = caesarCipher(inputText, caesarShiftKey, true);
+                    break;
+                case 'railfence':
+                    const railFenceKey = parseInt($('#railFenceKey').val());
+                    if (isNaN(railFenceKey) || railFenceKey < 2) {
+                        showAlert('Invalid Key', 'Please enter a valid key (number of rails, minimum 2).');
+                        return;
+                    }
+                    outputText = railFenceCipher(inputText, railFenceKey, true);
+                    break;
+                case 'playfair':
+                    const playfairKeyword = $('#playfairKeyword').val().toUpperCase().replace(/[^A-Z]/g, '');
+                    if (playfairKeyword.length === 0) {
+                        showAlert('Invalid Keyword', 'Please enter a valid keyword for Playfair cipher.');
+                        return;
+                    }
+                    outputText = playfairCipher(inputText, playfairKeyword, true);
+                    break;
+                default:
+                    showAlert('Error', 'Unknown cipher selected.');
+                    return;
             }
-            const encryptedText = playfairCipher(inputText, keyword, true);
-            $('#playfairOutputText').val(encryptedText);
+            $('#outputText').val(outputText);
         });
 
-        $('#playfairDecryptBtn').on('click', function() {
-            const inputText = $('#playfairInputText').val();
-            const keyword = $('#playfairKeyword').val().toUpperCase().replace(/[^A-Z]/g, ''); // Clean keyword
+        $('#decryptBtn').on('click', function() {
+            const inputText = $('#inputText').val();
+            let outputText = '';
+
             if (inputText.trim() === '') {
                 showAlert('Input Missing', 'Please enter text to decrypt.');
                 return;
             }
-            if (keyword.length === 0) {
-                showAlert('Invalid Keyword', 'Please enter a valid keyword for Playfair cipher.');
-                return;
+
+            switch(activeCipher) {
+                case 'caesar':
+                    const caesarShiftKey = parseInt($('#shiftKey').val());
+                    if (isNaN(caesarShiftKey) || caesarShiftKey < 1 || caesarShiftKey > 25) {
+                        showAlert('Invalid Shift Key', 'Please enter a valid shift key between 1 and 25.');
+                        return;
+                    }
+                    outputText = caesarCipher(inputText, caesarShiftKey, false);
+                    break;
+                case 'railfence':
+                    const railFenceKey = parseInt($('#railFenceKey').val());
+                    if (isNaN(railFenceKey) || railFenceKey < 2) {
+                        showAlert('Invalid Key', 'Please enter a valid key (number of rails, minimum 2).');
+                        return;
+                    }
+                    outputText = railFenceCipher(inputText, railFenceKey, false);
+                    break;
+                case 'playfair':
+                    const playfairKeyword = $('#playfairKeyword').val().toUpperCase().replace(/[^A-Z]/g, '');
+                    if (playfairKeyword.length === 0) {
+                        showAlert('Invalid Keyword', 'Please enter a valid keyword for Playfair cipher.');
+                        return;
+                    }
+                    outputText = playfairCipher(inputText, playfairKeyword, false);
+                    break;
+                default:
+                    showAlert('Error', 'Unknown cipher selected.');
+                    return;
             }
-            const decryptedText = playfairCipher(inputText, keyword, false);
-            $('#playfairOutputText').val(decryptedText);
+            $('#outputText').val(outputText);
         });
 
         // Initial setup: show Caesar cipher section
-        showCipherSection('caesar');
+        showCipherTool('caesar');
     });
 </script>
 </body>

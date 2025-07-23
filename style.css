@@ -205,7 +205,7 @@ body.light-mode .card:hover { box-shadow: 0 10px 20px var(--shadow-light); }
 
 /* Hidden Cipher Section */
 .hidden-cipher-section {
-    display: none;
+    display: none !important; /* Use !important to ensure it overrides flex/block */
 }
 
 /* Active Cipher Section */
@@ -216,9 +216,9 @@ body.light-mode .card:hover { box-shadow: 0 10px 20px var(--shadow-light); }
 }
 
 
-/* Cipher Tool Section */
+/* Cipher Tool Section (Unified) */
 .cipher-tool-section {
-    display: flex;
+    display: flex; /* Ensure it's always flex, hidden/shown by active-cipher-section */
     flex-direction: column;
     gap: 20px;
 }
